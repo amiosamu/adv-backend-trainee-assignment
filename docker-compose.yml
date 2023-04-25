@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  postgres-advertising:
+    image: "postgres:alpine"
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - "pgdata_account:/var/lib/postgresql/data"
+    command: ["postgres", "-c", "log_statement=all"]
+  advertising:
+    build:
+      context: ./advertising
+      target: builder
+    image: advertising
+    env_file: ./advertising/.env
+    expose:
+      - "8000"
+    volumes:
+      - ./advertising:/go/src/app
+    depends_on:
+      - postgres-advertising
+    command: reflex -r "\.go$$" -s -- sh -c "go run ./"
+volumes:
+  pgdata_account:
