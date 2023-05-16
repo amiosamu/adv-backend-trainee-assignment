@@ -13,5 +13,11 @@ func newAdvertisementRoutes(c *gin.RouterGroup, advertisementService service.Adv
 	r := &advertisementRoutes{
 		advertisementService: advertisementService,
 	}
-	c.POST("/")
+	c.POST("/create", r.create)
+}
+
+// @Summary Create advertisement
+// @Description Create advertisement
+func (r *advertisementRoutes) create(context *gin.Context) {
+	id, err := r.advertisementService.CreateAdvertisement(context.Request().Context())
 }

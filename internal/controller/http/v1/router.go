@@ -36,10 +36,10 @@ func NewRouter(services *service.Services) *gin.Engine {
 	url := ginSwagger.URL("http://localhost:8080/swagger/doc.json")
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
-	v1 := router.Group("/api/v1"){
-		newAdvertisementRoutes(v1.Group())
+	v1 := router.Group("/api/v1")
+	{
+		newAdvertisementRoutes(v1.Group("/advertisements"), service.AdvertisementService))
 	}
-
 
 	return router
 }
