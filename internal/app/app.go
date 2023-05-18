@@ -6,8 +6,8 @@ import (
 	v1 "github.com/amiosamu/adv-backend-trainee-assignment/internal/controller/http/v1"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/repo"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/service"
+	"github.com/amiosamu/adv-backend-trainee-assignment/pkg/httpserver"
 	"github.com/amiosamu/adv-backend-trainee-assignment/pkg/postgres"
-	"github.com/amiosamu/adv-backend-trainee-assignment/pkg/validator"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"os"
@@ -32,20 +32,20 @@ func Run(path string) {
 
 	log.Info("Initializing repositories...")
 
-	repo := repo.NewRepos(pg)
+	repository := repo.NewRepos(pg)
 
 	log.Info("Initializing service dependencies...")
 
 	dependencies := service.Dependencies{
 
-		Repos: repo,
+		Repos: repository,
 	}
 
-	services := service.NewService(dependencies)
+	services := service.NewServices(dependencies)
 
 	log.Info("Initializing handlers and routes...")
 	handler := gin.New()
-	handler.Validator() = validator.NewCustomValidator()
+
 	v1.NewRouter(handler, services)
 
 	log.Info("Starting http server...")

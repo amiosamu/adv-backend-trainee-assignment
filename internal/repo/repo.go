@@ -11,7 +11,6 @@ type Advertisement interface {
 	CreateAdvertisement(ctx context.Context, advertisement entity.Advertisement) (int, error)
 	GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error)
 	AdvertisementPagination(ctx context.Context, id int, sortType string, offset int, limit int) ([]entity.Advertisement, error)
-	// GetAdvertisementWithFields(ctx context.Context) ([]entity.Advertisement, error)
 }
 
 type Repos struct {

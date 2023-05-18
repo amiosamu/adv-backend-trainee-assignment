@@ -12,8 +12,7 @@ import (
 	"os"
 )
 
-func NewRouter(services *service.Services) *gin.Engine {
-	router := gin.New()
+func NewRouter(router *gin.Engine, services *service.Services) *gin.Engine {
 
 	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
 		Formatter: func(param gin.LogFormatterParams) string {
@@ -38,7 +37,7 @@ func NewRouter(services *service.Services) *gin.Engine {
 
 	v1 := router.Group("/api/v1")
 	{
-		newAdvertisementRoutes(v1.Group("/advertisements"), service.AdvertisementService))
+		newAdvertisementRoutes(v1.Group("/advertisements"), services.Advertisement)
 	}
 
 	return router
