@@ -22,14 +22,15 @@ func newAdvertisementRoutes(c *gin.RouterGroup, advertisementService service.Adv
 
 // @Summary Create advertisement
 // @Description Create advertisement
+// @Tags advertisements
+// @Accept json
+// @Produce json
+// @Success 201 {object} v1.advertisementsRoutes.create.response
+// @Router /api/v1/advertisements/create [post]
 func (r *advertisementRoutes) create(context *gin.Context) {
 	id, err := r.advertisementService.CreateAdvertisement(context.Request.Context(), entity.Advertisement{})
 	if err != nil {
 		log.Fatal()
-	}
-
-	type response struct {
-		Id int `json:"id"`
 	}
 	context.JSON(http.StatusCreated, map[string]interface{}{
 		"Id": id,
