@@ -10,7 +10,7 @@ type (
 	Config struct {
 		App  `yaml:"app"`
 		HTTP `yaml:"http"`
-		Log  `yaml:"http"`
+		Log  `yaml:"log"`
 		PG   `yaml:"pg"`
 	}
 	App struct {

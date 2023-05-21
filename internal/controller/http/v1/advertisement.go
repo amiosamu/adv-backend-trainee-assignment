@@ -36,3 +36,16 @@ func (r *advertisementRoutes) create(context *gin.Context) {
 		"Id": id,
 	})
 }
+
+type getByIdInput struct {
+	Id int `json:"id" validate:"required"`
+}
+
+func (r *advertisementRoutes) getById(context *gin.Context) {
+	var inp getByIdInput
+
+	if err := context.Bind(&inp); err != nil {
+
+	}
+
+}
