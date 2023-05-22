@@ -27,7 +27,7 @@ func NewAdvertisementRepo(pg *postgres.Postgres) *AdvertisementRepo {
 }
 
 func (r *AdvertisementRepo) CreateAdvertisement(ctx context.Context, advertisement entity.Advertisement) (int, error) {
-	sql, args, _ := r.Builder.Insert("advertisements").Columns("name", "description", "pictures", "price", "created_at").Values(advertisement.Name, advertisement.Description,
+	sql, args, _ := r.Builder.Insert("advertisement").Columns("name", "description", "pictures", "price", "created_at").Values(advertisement.Name, advertisement.Description,
 		advertisement.Pictures, advertisement.Price, advertisement.CreatedAt).Suffix("RETURNING id").ToSql()
 
 	var id int
@@ -45,7 +45,7 @@ func (r *AdvertisementRepo) CreateAdvertisement(ctx context.Context, advertiseme
 }
 
 func (r *AdvertisementRepo) GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error) {
-	sql, args, _ := r.Builder.Select("id, name, description, pictures, price, created_at").From("advertisements").Where("id = ?", id).ToSql()
+	sql, args, _ := r.Builder.Select("id, name, description, pictures, price, created_at").From("advertisement").Where("id = ?", id).ToSql()
 
 	var advertisement entity.Advertisement
 

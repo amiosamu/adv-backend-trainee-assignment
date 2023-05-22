@@ -32,8 +32,8 @@ func NewRouter(router *gin.Engine, services *service.Services) *gin.Engine {
 		c.Status(200)
 	})
 
-	url := ginSwagger.URL("http://localhost:8080/swagger/doc.json")
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+	//url := ginSwagger.URL("http://localhost:8080/swagger/*")
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	v1 := router.Group("/api/v1")
 	{
