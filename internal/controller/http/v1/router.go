@@ -2,11 +2,13 @@ package v1
 
 import (
 	"fmt"
+	_ "github.com/amiosamu/adv-backend-trainee-assignment/docs"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/service"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"net/http"
 	"time"
 
 	"os"
@@ -29,10 +31,9 @@ func NewRouter(router *gin.Engine, services *service.Services) *gin.Engine {
 	router.Use(gin.Recovery())
 
 	router.GET("/health", func(c *gin.Context) {
-		c.Status(200)
+		c.String(http.StatusOK, "pong")
 	})
 
-	//url := ginSwagger.URL("http://localhost:8080/swagger/*")
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	v1 := router.Group("/api/v1")

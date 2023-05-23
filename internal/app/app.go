@@ -15,6 +15,12 @@ import (
 	"syscall"
 )
 
+// @title Advertisement Management Service
+// @version 1.0
+// @description Test task from avito.tech for a Backend developer trainee
+// @host localhost:8089
+// @BasePath /
+
 func Run(path string) {
 	cfg, err := config.NewConfig(path)
 	if err != nil {
@@ -23,12 +29,17 @@ func Run(path string) {
 	SetLogger(cfg.Log.Level)
 	log.Info("Setting up postgres...")
 
-	pg, err := postgres.New(cfg.PG.URI, postgres.MaxPoolSize(cfg.PG.MaxPoolSize))
+	pg, err := postgres.InitDB()
 	if err != nil {
 		log.Fatal(fmt.Errorf("app - Run - pgdb.NewServices: %w", err))
 	}
 
-	defer pg.Close()
+	defer func(pg *postgres.DataSources) {
+		err := pg.Close()
+		if err != nil {
+			log.Fatalf("error setting up postgres: %w", err)
+		}
+	}(pg)
 
 	log.Info("Initializing repositories...")
 

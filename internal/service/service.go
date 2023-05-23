@@ -10,20 +10,6 @@ type Dependencies struct {
 	Repos *repo.Repos
 }
 
-type AdvertisementInput struct {
-	Id       int
-	SortType string
-	Offset   int
-	Limit    int
-}
-type AdvertisementOutput struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Pictures    string `json:"pictures"`
-	Price       int    `json:"price"`
-	Order       *int   `json:"order"`
-}
-
 type Advertisement interface {
 	CreateAdvertisement(ctx context.Context, entity entity.Advertisement) (int, error)
 	GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error)

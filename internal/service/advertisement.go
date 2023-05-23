@@ -11,15 +11,14 @@ type AdvertisementService struct {
 	advertisementRepo repo.Advertisement
 }
 
-func (a *AdvertisementService) GetAdvertisements(ctx context.Context) ([]entity.Advertisement, error) {
-	var advertisements []entity.Advertisement
-	return advertisements, nil
-}
-
 func NewAdvertisementService(advertisementRepo repo.Advertisement) *AdvertisementService {
 	return &AdvertisementService{
 		advertisementRepo: advertisementRepo,
 	}
+}
+
+func (a *AdvertisementService) GetAdvertisements(ctx context.Context) ([]entity.Advertisement, error) {
+	panic("implement me")
 }
 
 func (a *AdvertisementService) CreateAdvertisement(ctx context.Context, entity entity.Advertisement) (int, error) {

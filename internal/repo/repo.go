@@ -9,15 +9,15 @@ import (
 
 type Advertisement interface {
 	CreateAdvertisement(ctx context.Context, advertisement entity.Advertisement) (int, error)
-	GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error)
-	AdvertisementPagination(ctx context.Context, id int, sortType string, offset int, limit int) ([]entity.Advertisement, error)
+	GetAdvertisementById(ctx context.Context, id int) (*entity.Advertisement, error)
+	GetAdvertisements(ctx context.Context, id int, sortType string, offset int, limit int) ([]entity.Advertisement, error)
 }
 
 type Repos struct {
 	Advertisement
 }
 
-func NewRepos(pg *postgres.Postgres) *Repos {
+func NewRepos(pg *postgres.DataSources) *Repos {
 	return &Repos{
 		Advertisement: pgdb.NewAdvertisementRepo(pg),
 	}

@@ -1,78 +1,39 @@
 package postgres
 
 import (
-	"context"
 	"fmt"
-	"github.com/Masterminds/squirrel"
-	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/jackc/pgx/v5/pgxpool"
-	log "github.com/sirupsen/logrus"
-	"time"
+	"github.com/jmoiron/sqlx"
+	"os"
 )
 
-const (
-	defaultMaxPoolSize     = 1
-	defaultMaxConnAttempts = 10
-	defaultConnTimeout     = 1 * time.Second
-)
-
-type PgxPool interface {
-	Close()
-	Acquire(ctx context.Context) (*pgxpool.Conn, error)
-	Exec(ctx context.Context, sql string, arguments ...any) (pgconn.CommandTag, error)
-	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)
-	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
-	SendBatch(ctx context.Context, b *pgx.Batch) pgx.BatchResults
-	Begin(ctx context.Context) (pgx.Tx, error)
-	BeginTx(ctx context.Context, txOptions pgx.TxOptions) (pgx.Tx, error)
-	CopyFrom(ctx context.Context, tableName pgx.Identifier, columnNames []string, rowSrc pgx.CopyFromSource) (int64, error)
-	Ping(ctx context.Context) error
+type DataSources struct {
+	DB *sqlx.DB
 }
 
-type Postgres struct {
-	maxPoolSize  int
-	connAttempts int
-	connTimeout  time.Duration
-
-	Builder squirrel.StatementBuilderType
-	Pool    PgxPool
-}
-
-func New(uri string, options ...Option) (*Postgres, error) {
-	pg := &Postgres{
-		maxPoolSize:  defaultMaxPoolSize,
-		connTimeout:  defaultConnTimeout,
-		connAttempts: defaultMaxConnAttempts,
-	}
-
-	for _, option := range options {
-		option(pg)
-	}
-	pg.Builder = squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
-	poolConfig, err := pgxpool.ParseConfig(uri)
+func InitDB() (*DataSources, error) {
+	pgHost := os.Getenv("POSTGRES_HOST")
+	pgPort := os.Getenv("POSTGRES_PORT")
+	pgUser := os.Getenv("POSTGRES_USER")
+	pgPassword := os.Getenv("POSTGRES_PASSWORD")
+	pgDB := os.Getenv("POSTGRES_DATABASE")
+	pgSSL := os.Getenv("POSTGRES_SSL")
+	pgConnString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", pgHost, pgPort, pgUser, pgPassword, pgDB, pgSSL)
+	db, err := sqlx.Open("postgres", pgConnString)
 	if err != nil {
-		return nil, fmt.Errorf("pgdb - New - pgxpool.ParseConfig: %w", err)
+		return nil, fmt.Errorf("erorr connecting to db %w", err)
 	}
-	poolConfig.MaxConns = int32(pg.maxPoolSize)
+	if err := db.Ping(); err != nil {
+		return nil, fmt.Errorf("error connecting to db %w", err)
+	}
 
-	for pg.connAttempts > 0 {
-		pg.Pool, err = pgxpool.NewWithConfig(context.Background(), poolConfig)
-		if err != nil {
-			break
-		}
-		log.Printf("Postgres is trying to connect, attempts left: %d", pg.connAttempts)
-		time.Sleep(pg.connTimeout)
-		pg.connAttempts--
-	}
-	if err != nil {
-		return nil, fmt.Errorf("pgdb - New - pgxPool.ConnectConfig: %w", err)
-	}
-	return pg, nil
+	return &DataSources{
+		DB: db,
+	}, nil
 }
 
-func (p *Postgres) Close() {
-	if p.Pool != nil {
-		p.Pool.Close()
+func (d *DataSources) Close() error {
+	if err := d.DB.Close(); err != nil {
+		return fmt.Errorf("error closing Postgresql: %w", err)
 	}
+	return nil
 }
