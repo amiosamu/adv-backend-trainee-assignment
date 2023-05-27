@@ -2,7 +2,6 @@ package v1
 
 import (
 	"fmt"
-	_ "github.com/amiosamu/adv-backend-trainee-assignment/docs"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/service"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
