@@ -18,17 +18,16 @@ type AdvertisementRepo struct {
 	*postgres.Postgres
 }
 
-func (a AdvertisementRepo) CreateAdvertisement(ctx context.Context, advertisement entity.Advertisement) (int, error) {
+func (a *AdvertisementRepo) CreateAdvertisement(ctx context.Context, advertisement entity.Advertisement) (int, error) {
+	sql, args, _ := a.Builder.Insert("advertisement").Columns("name", "description").Values(advertisement)
+}
+
+func (a *AdvertisementRepo) GetAdvertisementById(ctx context.Context, id int) (*entity.Advertisement, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a AdvertisementRepo) GetAdvertisementById(ctx context.Context, id int) (*entity.Advertisement, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AdvertisementRepo) GetAdvertisements(ctx context.Context, id int, sortType string, offset int, limit int) ([]entity.Advertisement, error) {
+func (a *AdvertisementRepo) GetAdvertisements(ctx context.Context, id int, sortType string, offset int, limit int) ([]entity.Advertisement, error) {
 	//TODO implement me
 	panic("implement me")
 }
