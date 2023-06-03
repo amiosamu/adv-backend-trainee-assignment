@@ -18,7 +18,7 @@ import (
 // @title Advertisement Management Service
 // @version 1.0
 // @description Test task from avito.tech for a Backend developer trainee
-// @host localhost:8089
+// @host localhost:8080
 // @BasePath /
 
 func Run(path string) {

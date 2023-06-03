@@ -18,7 +18,11 @@ func NewAdvertisementService(advertisementRepo repo.Advertisement) *Advertisemen
 }
 
 func (a *AdvertisementService) GetAdvertisements(ctx context.Context) ([]entity.Advertisement, error) {
-	panic("implement me")
+	advertisements, err := a.advertisementRepo.GetAdvertisements(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return advertisements, nil
 }
 
 func (a *AdvertisementService) CreateAdvertisement(ctx context.Context, entity entity.Advertisement) (int, error) {

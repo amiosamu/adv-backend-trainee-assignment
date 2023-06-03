@@ -2,23 +2,23 @@ package app
 
 import (
 	"errors"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/lib/pq"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"time"
-
-	"github.com/golang-migrate/migrate/v4"
 	// migrate tools
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 const (
-	defaultAttempts = 20
+	defaultAttempts = 10
 	defaultTimeout  = time.Second
 )
 
 func init() {
-	databaseURL, ok := os.LookupEnv("PG_URI")
+	databaseURL, ok := os.LookupEnv("PG_URL")
 	if !ok || len(databaseURL) == 0 {
 		log.Printf("Migrate: environment variable not declared: PG_URI")
 	}

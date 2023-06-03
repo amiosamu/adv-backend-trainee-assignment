@@ -12,7 +12,7 @@ type Dependencies struct {
 
 type Advertisement interface {
 	CreateAdvertisement(ctx context.Context, entity entity.Advertisement) (int, error)
-	GetAdvertisementById(ctx context.Context, id int) (*entity.Advertisement, error)
+	GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error)
 	GetAdvertisements(ctx context.Context) ([]entity.Advertisement, error)
 }
 
