@@ -32,6 +32,6 @@ func (a *AdvertisementService) CreateAdvertisement(ctx context.Context, entity e
 
 }
 
-func (a *AdvertisementService) GetAdvertisementById(ctx context.Context, id int) (*entity.Advertisement, error) {
+func (a *AdvertisementService) GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error) {
 	return a.advertisementRepo.GetAdvertisementById(ctx, id)
 }
