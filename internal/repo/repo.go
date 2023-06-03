@@ -17,7 +17,7 @@ type Repos struct {
 	Advertisement
 }
 
-func NewRepos(pg *postgres.DataSources) *Repos {
+func NewRepos(pg *postgres.Postgres) *Repos {
 	return &Repos{
 		Advertisement: pgdb.NewAdvertisementRepo(pg),
 	}

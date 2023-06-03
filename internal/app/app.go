@@ -29,17 +29,11 @@ func Run(path string) {
 	SetLogger(cfg.Log.Level)
 	log.Info("Setting up postgres...")
 
-	pg, err := postgres.InitDB()
+	pg, err := postgres.New(cfg.PG.URI, postgres.MaxPoolSize(cfg.PG.MaxPoolSize))
 	if err != nil {
 		log.Fatal(fmt.Errorf("app - Run - pgdb.NewServices: %w", err))
 	}
-
-	defer func(pg *postgres.DataSources) {
-		err := pg.Close()
-		if err != nil {
-			log.Fatalf("error setting up postgres: %w", err)
-		}
-	}(pg)
+	defer pg.Close()
 
 	log.Info("Initializing repositories...")
 
