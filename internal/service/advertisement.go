@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/entity"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/repo"
-	"github.com/amiosamu/adv-backend-trainee-assignment/internal/repo/repoerrors"
 )
 
 type AdvertisementService struct {
@@ -28,9 +27,7 @@ func (a *AdvertisementService) GetAdvertisements(ctx context.Context) ([]entity.
 func (a *AdvertisementService) CreateAdvertisement(ctx context.Context, entity entity.Advertisement) (int, error) {
 	id, err := a.advertisementRepo.CreateAdvertisement(ctx, entity)
 	if err != nil {
-		if err == repoerrors.ErrAlreadyExists {
-			return 0, ErrAdvertisementAlreadyExists
-		}
+		return 0, ErrAdvertisementAlreadyExists
 	}
 	return id, nil
 
