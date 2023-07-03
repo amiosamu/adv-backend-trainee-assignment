@@ -17,22 +17,14 @@ func NewAdvertisementService(advertisementRepo repo.Advertisement) *Advertisemen
 }
 
 func (a *AdvertisementService) GetAdvertisements(ctx context.Context) ([]entity.Advertisement, error) {
-	advertisements, err := a.advertisementRepo.GetAdvertisements(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return advertisements, nil
+	panic("implement me")
 }
 
 func (a *AdvertisementService) CreateAdvertisement(ctx context.Context, entity entity.Advertisement) (int, error) {
-	id, err := a.advertisementRepo.CreateAdvertisement(ctx, entity)
-	if err != nil {
-		return 0, ErrAdvertisementAlreadyExists
-	}
-	return id, nil
+	panic("implement me")
 
 }
 
 func (a *AdvertisementService) GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error) {
-	return a.advertisementRepo.GetAdvertisementById(ctx, id)
+	panic("implement me")
 }

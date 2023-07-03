@@ -3,7 +3,7 @@ package pgdb
 import (
 	"context"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/entity"
-	"github.com/amiosamu/adv-backend-trainee-assignment/pkg/postgres"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
@@ -15,7 +15,7 @@ const (
 )
 
 type AdvertisementRepo struct {
-	*postgres.Postgres
+	DB *sqlx.DB
 }
 
 func (a *AdvertisementRepo) CreateAdvertisement(ctx context.Context, advertisement entity.Advertisement) (int, error) {
@@ -30,6 +30,6 @@ func (a *AdvertisementRepo) GetAdvertisements(ctx context.Context) ([]entity.Adv
 	panic("implement me")
 }
 
-func NewAdvertisementRepo(pg *postgres.Postgres) *AdvertisementRepo {
+func NewAdvertisementRepo(pg *sqlx.DB) *AdvertisementRepo {
 	return &AdvertisementRepo{pg}
 }

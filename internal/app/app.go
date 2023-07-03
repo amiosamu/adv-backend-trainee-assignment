@@ -28,16 +28,16 @@ func Run(path string) {
 	}
 	SetLogger(cfg.Log.Level)
 	log.Info("Setting up postgres...")
-
-	pg, err := postgres.New(cfg.PG.URI, postgres.MaxPoolSize(cfg.PG.MaxPoolSize))
+	db, err := postgres.InitDB()
 	if err != nil {
-		log.Fatal(fmt.Errorf("app - Run - pgdb.NewServices: %w", err))
+		log.Fatalf("unable to init database: %v\n", err)
 	}
-	defer pg.Close()
+
+	defer db.Close()
 
 	log.Info("Initializing repositories...")
 
-	repository := repo.NewRepos(pg)
+	repository := repo.NewRepos(db.DB)
 
 	log.Info("Initializing service dependencies...")
 

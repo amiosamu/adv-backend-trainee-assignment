@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/entity"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/repo/pgdb"
-	postgres "github.com/amiosamu/adv-backend-trainee-assignment/pkg/postgres"
+	"github.com/jmoiron/sqlx"
 )
 
 type Advertisement interface {
@@ -17,7 +17,7 @@ type Repos struct {
 	Advertisement
 }
 
-func NewRepos(pg *postgres.Postgres) *Repos {
+func NewRepos(pg *sqlx.DB) *Repos {
 	return &Repos{
 		Advertisement: pgdb.NewAdvertisementRepo(pg),
 	}
