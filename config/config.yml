@@ -1,5 +1,5 @@
 app:
-  name: 'blog-backend'
+  name: 'advertisement backend'
   version: '1.0.0'
 
 http:
