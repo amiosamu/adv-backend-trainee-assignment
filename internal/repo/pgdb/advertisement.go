@@ -2,12 +2,8 @@ package pgdb
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/entity"
-	"github.com/amiosamu/adv-backend-trainee-assignment/internal/repo/repoerrors"
 	"github.com/amiosamu/adv-backend-trainee-assignment/pkg/postgres"
-	"github.com/jackc/pgx/v5"
 	_ "github.com/lib/pq"
 )
 
@@ -23,62 +19,15 @@ type AdvertisementRepo struct {
 }
 
 func (a *AdvertisementRepo) CreateAdvertisement(ctx context.Context, advertisement entity.Advertisement) (int, error) {
-	sql, args, _ := a.Builder.Insert("advertisement").Columns("name", "description", "pictures", "price", "created_at").Values(advertisement.Name, advertisement.Description, advertisement.Pictures, advertisement.Price, advertisement.CreatedAt).Suffix("RETURNING id").ToSql()
-	fmt.Println(advertisement.Name)
-	fmt.Println(advertisement.Price)
-	fmt.Println(advertisement.Description)
-	var id int
-	err := a.Pool.QueryRow(ctx, sql, args...).Scan(&id)
-	if err != nil {
-		return 0, fmt.Errorf("AdvertisementRepo.CreateAdvertisement - r.Pool.QueryRow: %v", err)
-	}
-
-	return id, nil
+	panic("implement me")
 }
 
 func (a *AdvertisementRepo) GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error) {
-	sql, args, _ := a.Builder.Select("name, description, pictures, price, created_at").From("advertisement").Where("id = ?", id).ToSql()
-	var advertisement entity.Advertisement
-	err := a.Pool.QueryRow(ctx, sql, args...).Scan(&advertisement.Name, &advertisement.Description, &advertisement.Pictures, &advertisement.Price, &advertisement.CreatedAt)
-	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return entity.Advertisement{}, repoerrors.ErrNotFound
-		}
-		return entity.Advertisement{}, fmt.Errorf("AdvRepo.GetAdvertisementById - r.Pool.QueryRow: %v", err)
-	}
-	return advertisement, nil
+	panic("implement me")
 }
 
 func (a *AdvertisementRepo) GetAdvertisements(ctx context.Context) ([]entity.Advertisement, error) {
-	sql, args, _ := a.Builder.Select("id, name, description, pictures, price, created_at").From("advertisement").ToSql()
-
-	rows, err := a.Pool.Query(ctx, sql, args...)
-	if err != nil {
-		return nil, fmt.Errorf("AdvertisementRepo.GetAllAdvertisements - r.Pool.Query: %v", err)
-	}
-	defer rows.Close()
-
-	var advertisements []entity.Advertisement
-
-	for rows.Next() {
-		var advertisement entity.Advertisement
-		err := rows.Scan(
-			&advertisement.Id,
-			&advertisement.Name,
-			&advertisement.Description,
-			&advertisement.Pictures,
-			&advertisement.Price,
-			&advertisement.CreatedAt,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("AdvRepo.GetAdvertisements - rows.Scan: %v", err)
-		}
-		advertisements = append(advertisements, advertisement)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("AdvRepo.GetAdvertisements - rows.Err: %v", err)
-	}
-	return advertisements, nil
+	panic("implement me")
 }
 
 func NewAdvertisementRepo(pg *postgres.Postgres) *AdvertisementRepo {
