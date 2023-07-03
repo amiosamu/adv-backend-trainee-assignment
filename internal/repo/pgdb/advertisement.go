@@ -8,7 +8,6 @@ import (
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/repo/repoerrors"
 	"github.com/amiosamu/adv-backend-trainee-assignment/pkg/postgres"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgconn"
 	_ "github.com/lib/pq"
 )
 
@@ -25,16 +24,13 @@ type AdvertisementRepo struct {
 
 func (a *AdvertisementRepo) CreateAdvertisement(ctx context.Context, advertisement entity.Advertisement) (int, error) {
 	sql, args, _ := a.Builder.Insert("advertisement").Columns("name", "description", "pictures", "price", "created_at").Values(advertisement.Name, advertisement.Description, advertisement.Pictures, advertisement.Price, advertisement.CreatedAt).Suffix("RETURNING id").ToSql()
+	fmt.Println(advertisement.Name)
+	fmt.Println(advertisement.Price)
+	fmt.Println(advertisement.Description)
 	var id int
 	err := a.Pool.QueryRow(ctx, sql, args...).Scan(&id)
 	if err != nil {
-		var pgErr *pgconn.PgError
-		if ok := errors.As(err, &pgErr); ok {
-			if pgErr.Code == "23505" {
-				return 0, repoerrors.ErrAlreadyExists
-			}
-		}
-		return 0, fmt.Errorf("AdvertisementRepo.CreateUser - r.Pool.QueryRow: %v", err)
+		return 0, fmt.Errorf("AdvertisementRepo.CreateAdvertisement - r.Pool.QueryRow: %v", err)
 	}
 
 	return id, nil
@@ -58,7 +54,7 @@ func (a *AdvertisementRepo) GetAdvertisements(ctx context.Context) ([]entity.Adv
 
 	rows, err := a.Pool.Query(ctx, sql, args...)
 	if err != nil {
-		return nil, fmt.Errorf("UserRepo.GetAllUsers - r.Pool.Query: %v", err)
+		return nil, fmt.Errorf("AdvertisementRepo.GetAllAdvertisements - r.Pool.Query: %v", err)
 	}
 	defer rows.Close()
 
