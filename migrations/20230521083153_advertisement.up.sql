@@ -1,9 +1,11 @@
-create table advertisement
+CREATE TABLE IF NOT EXISTS advertisement
 (
-    id          serial primary key,
-    name        text      not null unique,
-    description text      not null,
-    pictures    text      not null,
-    price       int       not null,
-    created_at  timestamp not null default now()
+    id          SERIAL PRIMARY KEY,
+    name        TEXT NOT NULL,
+    description TEXT NOT NULL,
+    pictures    TEXT[] NOT NULL,
+    price       INT NOT NULL,
+    created_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
+
+
