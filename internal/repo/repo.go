@@ -8,7 +8,7 @@ import (
 )
 
 type Advertisement interface {
-	CreateAdvertisement(ctx context.Context, advertisement entity.Advertisement) (int, error)
+	CreateAdvertisement(ctx context.Context, advertisement *entity.Advertisement) (int, error)
 	GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error)
 	GetAdvertisements(ctx context.Context) ([]entity.Advertisement, error)
 }
