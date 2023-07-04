@@ -2,8 +2,11 @@ package service
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/entity"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/repo"
+	"github.com/amiosamu/adv-backend-trainee-assignment/internal/repo/repoerrors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -31,5 +34,17 @@ func (a *AdvertisementService) GetAdvertisements(ctx context.Context) ([]entity.
 }
 
 func (a *AdvertisementService) GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error) {
-	panic("implement me")
+	advertisement, err := a.advertisementRepo.GetAdvertisementById(ctx, id)
+	if err != nil {
+
+		fmt.Printf("Failed to retrieve advertisement with ID %d: %s\n", id, err.Error())
+
+		if errors.Is(err, repoerrors.ErrNotFound) {
+			return advertisement, ErrAdvertisementNotFound
+		}
+
+		return advertisement, ErrCannotGetAdvertisement
+	}
+
+	return advertisement, nil
 }

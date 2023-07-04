@@ -33,7 +33,20 @@ func (a *AdvertisementRepo) CreateAdvertisement(ctx context.Context, advertiseme
 }
 
 func (a *AdvertisementRepo) GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error) {
-	panic("implement me")
+	advertisement := entity.Advertisement{}
+	q := `SELECT id, name, description, pictures, price, created_at FROM advertisement WHERE id = $1`
+	err := a.DB.QueryRowContext(ctx, q, id).Scan(
+		&advertisement.Id,
+		&advertisement.Name,
+		&advertisement.Description,
+		pq.Array(&advertisement.Pictures),
+		&advertisement.Price,
+		&advertisement.CreatedAt,
+	)
+	if err != nil {
+		return entity.Advertisement{}, err
+	}
+	return advertisement, nil
 }
 
 func (a *AdvertisementRepo) GetAdvertisements(ctx context.Context) ([]entity.Advertisement, error) {

@@ -1,10 +1,13 @@
 package v1
 
 import (
+	"errors"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/entity"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 type advertisementRoutes struct {
@@ -16,6 +19,14 @@ type createAdvertisementRequest struct {
 	Description string   `json:"description" binding:"required"`
 	Pictures    []string `json:"pictures" binding:"required"`
 	Price       int      `json:"price" binding:"required"`
+}
+type getAdvertisementResponse struct {
+	ID          int       `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Pictures    []string  `json:"pictures"`
+	Price       int       `json:"price"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 type createAdvertisementResponse struct {
@@ -66,7 +77,7 @@ func (r *advertisementRoutes) create(context *gin.Context) {
 }
 
 // @Summary Get advertisement
-// @Description Get  advertisement by Id
+// @Description Get advertisement by Id
 // @Tags advertisements
 // @Accept json
 // @Produce json
@@ -74,7 +85,35 @@ func (r *advertisementRoutes) create(context *gin.Context) {
 // @Failure 400 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/v1/advertisements/:id [post]
-func (r *advertisementRoutes) get(context *gin.Context) {
+// @Router /api/v1/advertisements/:id [get]
 
+func (r *advertisementRoutes) get(context *gin.Context) {
+	id := context.Param("id")
+
+	adID, err := strconv.Atoi(id)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid advertisement ID"})
+		return
+	}
+
+	advertisement, err := r.advertisementService.GetAdvertisementById(context.Request.Context(), adID)
+	if err != nil {
+		if errors.Is(err, service.ErrAdvertisementNotFound) {
+			context.JSON(http.StatusNotFound, gin.H{"error": "Advertisement not found"})
+		} else {
+			context.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		}
+		return
+	}
+
+	response := getAdvertisementResponse{
+		ID:          advertisement.Id,
+		Name:        advertisement.Name,
+		Description: advertisement.Description,
+		Pictures:    advertisement.Pictures,
+		Price:       advertisement.Price,
+		CreatedAt:   advertisement.CreatedAt,
+	}
+
+	context.JSON(http.StatusOK, response)
 }
