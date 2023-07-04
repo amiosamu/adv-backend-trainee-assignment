@@ -30,7 +30,12 @@ func (a *AdvertisementService) CreateAdvertisement(ctx context.Context, advertis
 }
 
 func (a *AdvertisementService) GetAdvertisements(ctx context.Context) ([]entity.Advertisement, error) {
-	panic("implement me")
+	advertisements, err := a.advertisementRepo.GetAdvertisements(ctx)
+	if err != nil {
+		log.Printf("Failed to retrieve advertisements: %v", err)
+		return nil, ErrCannotGetAdvertisement
+	}
+	return advertisements, nil
 }
 
 func (a *AdvertisementService) GetAdvertisementById(ctx context.Context, id int) (entity.Advertisement, error) {

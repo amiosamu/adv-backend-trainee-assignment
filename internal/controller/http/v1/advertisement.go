@@ -5,6 +5,7 @@ import (
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/entity"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/service"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 	"time"
@@ -39,6 +40,7 @@ func newAdvertisementRoutes(c *gin.RouterGroup, advertisementService service.Adv
 	}
 	c.POST("/create", r.create)
 	c.GET("/:id", r.get)
+	c.GET("/", r.getAll)
 }
 
 // @Summary Create advertisement
@@ -52,10 +54,10 @@ func newAdvertisementRoutes(c *gin.RouterGroup, advertisementService service.Adv
 // @Failure default {object} errorResponse
 // @Router /api/v1/advertisements/create [post]
 
-func (r *advertisementRoutes) create(context *gin.Context) {
+func (r *advertisementRoutes) create(ctx *gin.Context) {
 	var request createAdvertisementRequest
-	if err := context.ShouldBindJSON(&request); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -66,14 +68,14 @@ func (r *advertisementRoutes) create(context *gin.Context) {
 		Price:       request.Price,
 	}
 
-	id, err := r.advertisementService.CreateAdvertisement(context.Request.Context(), advertisement)
+	id, err := r.advertisementService.CreateAdvertisement(ctx.Request.Context(), advertisement)
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	response := createAdvertisementResponse{ID: id}
-	context.JSON(http.StatusCreated, response)
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // @Summary Get advertisement
@@ -87,21 +89,21 @@ func (r *advertisementRoutes) create(context *gin.Context) {
 // @Failure default {object} errorResponse
 // @Router /api/v1/advertisements/:id [get]
 
-func (r *advertisementRoutes) get(context *gin.Context) {
-	id := context.Param("id")
+func (r *advertisementRoutes) get(ctx *gin.Context) {
+	id := ctx.Param("id")
 
 	adID, err := strconv.Atoi(id)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid advertisement ID"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid advertisement ID"})
 		return
 	}
 
-	advertisement, err := r.advertisementService.GetAdvertisementById(context.Request.Context(), adID)
+	advertisement, err := r.advertisementService.GetAdvertisementById(ctx.Request.Context(), adID)
 	if err != nil {
 		if errors.Is(err, service.ErrAdvertisementNotFound) {
-			context.JSON(http.StatusNotFound, gin.H{"error": "Advertisement not found"})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "Advertisement not found"})
 		} else {
-			context.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		}
 		return
 	}
@@ -115,5 +117,29 @@ func (r *advertisementRoutes) get(context *gin.Context) {
 		CreatedAt:   advertisement.CreatedAt,
 	}
 
-	context.JSON(http.StatusOK, response)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (r *advertisementRoutes) getAll(ctx *gin.Context) {
+	advertisements, err := r.advertisementService.GetAdvertisements(ctx.Request.Context())
+	if err != nil {
+		log.Printf("Failed to get advertisements: %v", err)
+
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	response := make([]getAdvertisementResponse, len(advertisements))
+	for i, ad := range advertisements {
+		response[i] = getAdvertisementResponse{
+			ID:          ad.Id,
+			Name:        ad.Name,
+			Description: ad.Description,
+			Pictures:    ad.Pictures,
+			Price:       ad.Price,
+			CreatedAt:   ad.CreatedAt,
+		}
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }
