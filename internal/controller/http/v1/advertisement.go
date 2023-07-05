@@ -8,7 +8,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 type advertisementRoutes struct {
@@ -22,16 +21,17 @@ type createAdvertisementRequest struct {
 	Price       int      `json:"price" binding:"required"`
 }
 type getAdvertisementResponse struct {
-	ID          int       `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Pictures    []string  `json:"pictures"`
-	Price       int       `json:"price"`
-	CreatedAt   time.Time `json:"created_at"`
+	ID          int      `json:"id"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Pictures    []string `json:"pictures"`
+	Price       int      `json:"price"`
+	CreatedAt   string   `json:"created_at"`
 }
 
 type createAdvertisementResponse struct {
-	ID int `json:"id"`
+	ID   int `json:"id"`
+	Code int `json:"code"`
 }
 
 func newAdvertisementRoutes(c *gin.RouterGroup, advertisementService service.Advertisement) {
@@ -74,7 +74,10 @@ func (r *advertisementRoutes) create(ctx *gin.Context) {
 		return
 	}
 
-	response := createAdvertisementResponse{ID: id}
+	response := createAdvertisementResponse{
+		ID:   id,
+		Code: http.StatusCreated,
+	}
 	ctx.JSON(http.StatusCreated, response)
 }
 
@@ -100,6 +103,7 @@ func (r *advertisementRoutes) get(ctx *gin.Context) {
 
 	advertisement, err := r.advertisementService.GetAdvertisementById(ctx.Request.Context(), adID)
 	if err != nil {
+		log.Printf("failed to get advertisement by id: %v", err.Error())
 		if errors.Is(err, service.ErrAdvertisementNotFound) {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": "Advertisement not found"})
 		} else {
@@ -114,7 +118,7 @@ func (r *advertisementRoutes) get(ctx *gin.Context) {
 		Description: advertisement.Description,
 		Pictures:    advertisement.Pictures,
 		Price:       advertisement.Price,
-		CreatedAt:   advertisement.CreatedAt,
+		CreatedAt:   advertisement.CreatedAt.Format("January 2, 2006 15:04:05"),
 	}
 
 	ctx.JSON(http.StatusOK, response)
@@ -123,7 +127,7 @@ func (r *advertisementRoutes) get(ctx *gin.Context) {
 func (r *advertisementRoutes) getAll(ctx *gin.Context) {
 	advertisements, err := r.advertisementService.GetAdvertisements(ctx.Request.Context())
 	if err != nil {
-		log.Printf("Failed to get advertisements: %v", err)
+		log.Printf("failed to get advertisements: %v", err)
 
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
@@ -137,7 +141,7 @@ func (r *advertisementRoutes) getAll(ctx *gin.Context) {
 			Description: ad.Description,
 			Pictures:    ad.Pictures,
 			Price:       ad.Price,
-			CreatedAt:   ad.CreatedAt,
+			CreatedAt:   ad.CreatedAt.Format("January 2, 2006 15:04:05"),
 		}
 	}
 
