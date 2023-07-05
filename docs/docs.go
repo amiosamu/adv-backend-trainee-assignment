@@ -36,47 +36,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/advertisements/:id": {
-            "get": {
-                "description": "Get advertisement by Id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "advertisements"
-                ],
-                "summary": "Get advertisement",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/v1.advertisementRoutes"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/v1.getAdvertisementResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/v1.getAdvertisementResponse"
-                        }
-                    },
-                    "default": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/v1.getAdvertisementResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/advertisements/create": {
             "post": {
                 "description": "Create advertisement",
@@ -113,6 +72,56 @@ const docTemplate = `{
                         "description": "",
                         "schema": {
                             "$ref": "#/definitions/v1.createAdvertisementResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/advertisements/{id}": {
+            "get": {
+                "description": "Get advertisement by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "advertisements"
+                ],
+                "summary": "Get advertisement",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Advertisement ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.getAdvertisementResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.getAdvertisementResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/v1.getAdvertisementResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.getAdvertisementResponse"
                         }
                     }
                 }
@@ -170,7 +179,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Advertisement Management Service",
-	Description:      "Test task from avito.tech for a Backend developer trainee",
+	Description:      "Test task from avito.tech for a Backend developer trainee.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

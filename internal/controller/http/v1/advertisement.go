@@ -82,15 +82,16 @@ func (r *advertisementRoutes) create(ctx *gin.Context) {
 }
 
 // @Summary Get advertisement
-// @Description Get advertisement by Id
+// @Description Get advertisement by ID
 // @Tags advertisements
 // @Accept json
 // @Produce json
-// @Success 200 {object} v1.advertisementRoutes.get.getAdvertisementResponse
+// @Param id path int true "Advertisement ID"
+// @Success 200 {object} getAdvertisementResponse
+// @Failure 400 {object} getAdvertisementResponse
 // @Failure 404 {object} getAdvertisementResponse
 // @Failure 500 {object} getAdvertisementResponse
-// @Failure default {object} getAdvertisementResponse
-// @Router /api/v1/advertisements/:id [get]
+// @Router /api/v1/advertisements/{id} [get]
 func (r *advertisementRoutes) get(ctx *gin.Context) {
 	id := ctx.Param("id")
 

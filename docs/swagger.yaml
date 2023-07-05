@@ -29,7 +29,7 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: Test task from avito.tech for a Backend developer trainee
+  description: Test task from avito.tech for a Backend developer trainee.
   title: Advertisement Management Service
   version: "1.0"
 paths:
@@ -46,28 +46,34 @@ paths:
       summary: Get advertisement
       tags:
       - advertisements
-  /api/v1/advertisements/:id:
+  /api/v1/advertisements/{id}:
     get:
       consumes:
       - application/json
-      description: Get advertisement by Id
+      description: Get advertisement by ID
+      parameters:
+      - description: Advertisement ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v1.advertisementRoutes'
+            $ref: '#/definitions/v1.getAdvertisementResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.getAdvertisementResponse'
         "404":
           description: Not Found
           schema:
             $ref: '#/definitions/v1.getAdvertisementResponse'
         "500":
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/v1.getAdvertisementResponse'
-        default:
-          description: ""
           schema:
             $ref: '#/definitions/v1.getAdvertisementResponse'
       summary: Get advertisement
