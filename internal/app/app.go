@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"github.com/amiosamu/adv-backend-trainee-assignment/config"
+	_ "github.com/amiosamu/adv-backend-trainee-assignment/docs"
 	v1 "github.com/amiosamu/adv-backend-trainee-assignment/internal/controller/http/v1"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/repo"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/service"
@@ -17,9 +18,11 @@ import (
 
 // @title Advertisement Management Service
 // @version 1.0
+
 // @description Test task from avito.tech for a Backend developer trainee
+
 // @host localhost:8080
-// @BasePath /
+// @BasePath  /
 
 func Run(path string) {
 	cfg, err := config.NewConfig(path)

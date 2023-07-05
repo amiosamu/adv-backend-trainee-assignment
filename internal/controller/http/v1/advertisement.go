@@ -2,6 +2,7 @@ package v1
 
 import (
 	"errors"
+	_ "github.com/amiosamu/adv-backend-trainee-assignment/docs"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/entity"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/service"
 	"github.com/gin-gonic/gin"
@@ -48,12 +49,11 @@ func newAdvertisementRoutes(c *gin.RouterGroup, advertisementService service.Adv
 // @Tags advertisements
 // @Accept json
 // @Produce json
-// @Success 201 {object} v1.advertisementsRoutes.create.response
-// @Failure 400 {object} errorResponse
-// @Failure 500 {object} errorResponse
-// @Failure default {object} errorResponse
+// @Success 201 {object} v1.advertisementRoutes.create.createAdvertisementResponse
+// @Failure 400 {object} createAdvertisementResponse
+// @Failure 500 {object} createAdvertisementResponse
+// @Failure default {object} createAdvertisementResponse
 // @Router /api/v1/advertisements/create [post]
-
 func (r *advertisementRoutes) create(ctx *gin.Context) {
 	var request createAdvertisementRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
@@ -86,12 +86,11 @@ func (r *advertisementRoutes) create(ctx *gin.Context) {
 // @Tags advertisements
 // @Accept json
 // @Produce json
-// @Success 201 {object} v1.advertisementsRoutes.get.response
-// @Failure 400 {object} errorResponse
-// @Failure 500 {object} errorResponse
-// @Failure default {object} errorResponse
+// @Success 200 {object} v1.advertisementRoutes.get.getAdvertisementResponse
+// @Failure 404 {object} getAdvertisementResponse
+// @Failure 500 {object} getAdvertisementResponse
+// @Failure default {object} getAdvertisementResponse
 // @Router /api/v1/advertisements/:id [get]
-
 func (r *advertisementRoutes) get(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -124,6 +123,12 @@ func (r *advertisementRoutes) get(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// @Summary Get advertisement
+// @Description Get all advertisements
+// @Tags advertisements
+// @Produce json
+// @Success 200 {object} v1.advertisementRoutes.getAll.response
+// @Router /api/v1/advertisements/ [get]
 func (r *advertisementRoutes) getAll(ctx *gin.Context) {
 	advertisements, err := r.advertisementService.GetAdvertisements(ctx.Request.Context())
 	if err != nil {

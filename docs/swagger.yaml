@@ -1,0 +1,103 @@
+basePath: /
+definitions:
+  v1.advertisementRoutes:
+    type: object
+  v1.createAdvertisementResponse:
+    properties:
+      code:
+        type: integer
+      id:
+        type: integer
+    type: object
+  v1.getAdvertisementResponse:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      pictures:
+        items:
+          type: string
+        type: array
+      price:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Test task from avito.tech for a Backend developer trainee
+  title: Advertisement Management Service
+  version: "1.0"
+paths:
+  /api/v1/advertisements/:
+    get:
+      description: Get all advertisements
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.advertisementRoutes'
+      summary: Get advertisement
+      tags:
+      - advertisements
+  /api/v1/advertisements/:id:
+    get:
+      consumes:
+      - application/json
+      description: Get advertisement by Id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.advertisementRoutes'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.getAdvertisementResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.getAdvertisementResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/v1.getAdvertisementResponse'
+      summary: Get advertisement
+      tags:
+      - advertisements
+  /api/v1/advertisements/create:
+    post:
+      consumes:
+      - application/json
+      description: Create advertisement
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/v1.advertisementRoutes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.createAdvertisementResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.createAdvertisementResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/v1.createAdvertisementResponse'
+      summary: Create advertisement
+      tags:
+      - advertisements
+swagger: "2.0"
