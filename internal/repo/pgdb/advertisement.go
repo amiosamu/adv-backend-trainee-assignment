@@ -3,6 +3,7 @@ package pgdb
 import (
 	"context"
 	"github.com/amiosamu/adv-backend-trainee-assignment/internal/entity"
+	"github.com/amiosamu/adv-backend-trainee-assignment/internal/repo/repoerrors"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
@@ -27,7 +28,7 @@ func (a *AdvertisementRepo) CreateAdvertisement(ctx context.Context, advertiseme
 	args := []interface{}{advertisement.Name, advertisement.Description, pq.Array(&advertisement.Pictures), advertisement.Price}
 	err := a.DB.QueryRowContext(ctx, q, args...).Scan(&advertisement.Id)
 	if err != nil {
-		return 0, err
+		return 0, repoerrors.CannotCreate
 	}
 	return advertisement.Id, nil
 }
@@ -44,7 +45,7 @@ func (a *AdvertisementRepo) GetAdvertisementById(ctx context.Context, id int) (e
 		&advertisement.CreatedAt,
 	)
 	if err != nil {
-		return entity.Advertisement{}, err
+		return entity.Advertisement{}, repoerrors.ErrNotFound
 	}
 	return advertisement, nil
 }
