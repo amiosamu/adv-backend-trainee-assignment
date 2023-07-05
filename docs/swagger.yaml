@@ -2,6 +2,24 @@ basePath: /
 definitions:
   v1.advertisementRoutes:
     type: object
+  v1.createAdvertisementRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      pictures:
+        items:
+          type: string
+        type: array
+      price:
+        type: integer
+    required:
+    - description
+    - name
+    - pictures
+    - price
+    type: object
   v1.createAdvertisementResponse:
     properties:
       code:
@@ -84,13 +102,20 @@ paths:
       consumes:
       - application/json
       description: Create advertisement
+      parameters:
+      - description: Advertisement Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.createAdvertisementRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/v1.advertisementRoutes'
+            $ref: '#/definitions/v1.createAdvertisementResponse'
         "400":
           description: Bad Request
           schema:

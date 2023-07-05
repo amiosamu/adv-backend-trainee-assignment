@@ -49,7 +49,8 @@ func newAdvertisementRoutes(c *gin.RouterGroup, advertisementService service.Adv
 // @Tags advertisements
 // @Accept json
 // @Produce json
-// @Success 201 {object} v1.advertisementRoutes.create.createAdvertisementResponse
+// @Param request body createAdvertisementRequest true "Advertisement Request"
+// @Success 201 {object} createAdvertisementResponse
 // @Failure 400 {object} createAdvertisementResponse
 // @Failure 500 {object} createAdvertisementResponse
 // @Failure default {object} createAdvertisementResponse

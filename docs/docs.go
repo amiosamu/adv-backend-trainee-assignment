@@ -49,11 +49,22 @@ const docTemplate = `{
                     "advertisements"
                 ],
                 "summary": "Create advertisement",
+                "parameters": [
+                    {
+                        "description": "Advertisement Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.createAdvertisementRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/v1.advertisementRoutes"
+                            "$ref": "#/definitions/v1.createAdvertisementResponse"
                         }
                     },
                     "400": {
@@ -131,6 +142,32 @@ const docTemplate = `{
     "definitions": {
         "v1.advertisementRoutes": {
             "type": "object"
+        },
+        "v1.createAdvertisementRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "name",
+                "pictures",
+                "price"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pictures": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "price": {
+                    "type": "integer"
+                }
+            }
         },
         "v1.createAdvertisementResponse": {
             "type": "object",

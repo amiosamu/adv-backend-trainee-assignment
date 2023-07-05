@@ -9,9 +9,8 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
-	"time"
-
 	"os"
+	"time"
 )
 
 func NewRouter(router *gin.Engine, services *service.Services) *gin.Engine {
