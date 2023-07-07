@@ -34,7 +34,6 @@ func NewRouter(router *gin.Engine, services *service.Services) *gin.Engine {
 	})
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
 	v1 := router.Group("/api/v1")
 	{
 		newAdvertisementRoutes(v1.Group("/advertisements"), services.Advertisement)

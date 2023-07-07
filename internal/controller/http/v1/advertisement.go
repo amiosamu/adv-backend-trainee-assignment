@@ -52,7 +52,7 @@ func newAdvertisementRoutes(c *gin.RouterGroup, advertisementService service.Adv
 // @Param request body createAdvertisementRequest true "Advertisement Request"
 // @Success 201 {object} createAdvertisementResponse
 // @Failure 400 {object} createAdvertisementResponse
-// @Failure 500 {object} createAdvertisementResponse
+// @Failure 500 {object} newErrorResponse
 // @Failure default {object} createAdvertisementResponse
 // @Router /api/v1/advertisements/create [post]
 func (r *advertisementRoutes) create(ctx *gin.Context) {
